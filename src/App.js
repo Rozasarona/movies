@@ -1,6 +1,7 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
 import './App.css';
+import MovieCard from './MovieCard'
 
 
 class App extends React.Component {
@@ -8,7 +9,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [],
+            films: [],
         };
     }
     componentDidMount() {
@@ -17,7 +18,7 @@ class App extends React.Component {
             .then(
                (result) => {
                    this.setState({
-                       items: result.items
+                       films: result.films
                    });
                    console.log(result);
                },
@@ -26,9 +27,14 @@ class App extends React.Component {
      }
     
     render()  {
+        
+       /* for(let i = 0; i<=5; i++) {
+
+        }*/
+
         return(
-            <div>Hello!</div>
-        );
+            <MovieCard />
+        )    
     }
 }
 
