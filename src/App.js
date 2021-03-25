@@ -1,7 +1,7 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
 import './App.css';
-import MovieCard from './MovieCard'
+import FilmList from './components/FilmList/FilmList'
 
 
 class App extends React.Component {
@@ -33,7 +33,8 @@ class App extends React.Component {
         }*/
 
         return(
-            <MovieCard />
+            <FilmList 
+                films = {this.state.films}/>
         )    
     }
 }
