@@ -1,7 +1,7 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
 import './App.css';
-import FilmList from './components/FilmList/FilmList'
+import FilmList from '../FilmList/FilmList'
 
 
 class App extends React.Component {

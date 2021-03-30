@@ -1,5 +1,6 @@
 import React from 'react';
 import MovieCard from '../MovieCard/MovieCard';
+import './FilmList.css'
 
 function FilmList({ films }) {
     let films1 = films.slice(0,6);
@@ -11,6 +12,17 @@ let films2 = films1.map((item) => (
 ));
 
     return films2;
+        <section class="moviesapp">
+            <div class="moviesapp_container">
+
+            </div>
+            <div class="moviesapp_container">
+
+            </div> 
+            <div class="moviesapp_container">
+
+            </div>  
+        </section>
 }
 
 export default FilmList;
