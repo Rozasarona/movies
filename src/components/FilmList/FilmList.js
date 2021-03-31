@@ -11,18 +11,11 @@ let films2 = films1.map((item) => (
         overview={item.overview} />
 ));
 
-    return films2;
+    return (
         <section class="moviesapp">
-            <div class="moviesapp_container">
-
-            </div>
-            <div class="moviesapp_container">
-
-            </div> 
-            <div class="moviesapp_container">
-
-            </div>  
+            { films2 }  
         </section>
+    )
 }
 
 export default FilmList;

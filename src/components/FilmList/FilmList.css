@@ -1,14 +1,8 @@
-.wrapper {
-    display: flex;
-    justify-content: center;
-}
-
 .moviesapp {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding: 19px; 
-    justify-content: center;
-    width: 1010px;
+      
     position: relative;
     min-height: 1000px;
     background: #FFFFFF;
@@ -16,10 +10,10 @@
     margin-left: 215px;
     margin-right: 215px;
     margin-top: 0px;
-    margin-bottom: 0px;
-    width: 95%;
+    margin-bottom: 0px;    
     min-width: 0px;
     max-width: 1300px;
+    flex-wrap: wrap;
 }
 
 

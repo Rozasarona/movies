@@ -26,14 +26,13 @@ class App extends React.Component {
                   
      }
     
-    render()  {
-        
-       
+    render()  {       
 
         return(
-            <FilmList 
-                films = {this.state.films}/>
-                
+            <div class="wrapper">
+                <FilmList 
+                    films = { this.state.films }/>
+            </div>  
         )    
     }
 }
