@@ -1,19 +1,16 @@
 .moviesapp {
     display: flex;
     flex-direction: row;
-    padding: 19px; 
-      
-    position: relative;
+    justify-content: center;
+    padding: 19px;     
     min-height: 1000px;
     background: #FFFFFF;
-    display: inline-block;
-    margin-left: 215px;
-    margin-right: 215px;
     margin-top: 0px;
     margin-bottom: 0px;    
     min-width: 0px;
     max-width: 1300px;
     flex-wrap: wrap;
+    
 }
 
 
