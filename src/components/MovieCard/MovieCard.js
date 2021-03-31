@@ -3,13 +3,14 @@ import './MovieCard.css';
 import FilmCover from '../FilmCover/FilmCover'
 
 
-function MovieCard ({backdrop_path, title, overview}) {
+function MovieCard ({poster_path, title, overview, configuration}) {
 
     return (
-        <div class="moviesapp_film">
-            <FilmCover 
-               backdrop_path = {backdrop_path} />
-            <div class="moviesapp_content">
+        <div className="moviesapp_film">
+            <FilmCover
+               configuration = { configuration } 
+               poster_path = { poster_path } />
+            <div className="moviesapp_content">
                 <h2>{title}</h2>
                 <p>March 5, 2020</p>
                 <button>Action</button>
