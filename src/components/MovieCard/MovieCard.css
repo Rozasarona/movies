@@ -6,17 +6,17 @@
     margin: 0 10px 19px;   
     background: #FFFFFF; 
     box-shadow: 5px 5px 5px rgba(0,0,0,0.5); /* Параметры тени */
-    padding: 10px;
+    
 }
 
 .moviesapp_content {
     padding: 20px;
     margin-bottom: 19px;
-    font-family: 'Mukta', sans-serif;
-    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 15px;
-    letter-spacing: 0em;
+    font-weight: normal;
+    line-height: 22px;
     text-align: left;
+    width: 250px;
 }

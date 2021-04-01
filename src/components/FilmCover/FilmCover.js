@@ -9,6 +9,7 @@ function FilmCover({ poster_path, configuration }) {
   return (
     <Image
         width={183}
+        height={281}
         src={ url }
     />
   );
