@@ -9,7 +9,8 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            films: []
+            films: [],
+            loading: true
         };
     }
     componentDidMount() {
@@ -33,10 +34,13 @@ class App extends React.Component {
             })                        
     }
     
-    render()  {       
+    render()  {    
+        
+        const loading = this.state.loading;
+        
 
         return(
-            <div className="wrapper">
+            <div className="wrapper">                
                 <FilmList 
                     films = { this.state.films }
                     configuration = {this.state.configuration}/>

@@ -2,10 +2,11 @@ import React from 'react';
 import './MovieCard.css';
 import FilmCover from '../FilmCover/FilmCover';
 import { format } from 'date-fns';
+import { Spin } from 'antd';
 
 
 
-function MovieCard ({poster_path, title, overview, configuration, release_date}) {
+function MovieCard ({poster_path, title, overview, configuration, release_date, loading}) {
 
     function cutOverview (overview, maxLength) {
         if (overview.length <= maxLength) return overview;
@@ -17,9 +18,28 @@ function MovieCard ({poster_path, title, overview, configuration, release_date})
 
     let releaseDate = new Date(release_date);
 
+    if (loading) {
+        return <Spin size="large"/>
+    }
+
+    const spinner = loading ? <Spin /> : null;
+    const content != loading ? <FilmCardView /> : null
+
     return (
         <div className="moviesapp_film">
-            <FilmCover
+            { spinner }
+            { content }
+        </div>
+    );
+}
+
+export default MovieCard;
+
+
+const FilmCardView = () => {
+    return (
+       <React.Fragment>
+           <FilmCover
                configuration = { configuration } 
                poster_path = { poster_path } />
             <div className="moviesapp_content">
@@ -29,13 +49,9 @@ function MovieCard ({poster_path, title, overview, configuration, release_date})
                 <button>Drama</button><br/><br/>
                 <p>{ cutOverview(overview, 130) }</p>
             </div>
-        </div>
-    );
+       </React.Fragment> 
+    )
 }
-
-export default MovieCard;
-
-
 
     
     
