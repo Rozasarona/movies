@@ -2,6 +2,7 @@ import React from 'react';
 //import ReactDOM from 'react-dom';
 import './App.css';
 import FilmList from '../FilmList/FilmList'
+import { Spin } from 'antd';
 
 
 class App extends React.Component {
@@ -27,7 +28,8 @@ class App extends React.Component {
                     .then(res => res.json())
                     .then((result) => {
                         this.setState({
-                            films: result.results
+                            films: result.results,
+                            loading: false
                         });
                         console.log(result);
                     }); 
@@ -37,14 +39,16 @@ class App extends React.Component {
     render()  {    
         
         const loading = this.state.loading;
-        
+        const spinner = loading ? <Spin /> : null;
+        const content = !loading ? <FilmList 
+                                       films = { this.state.films }
+                                       configuration = {this.state.configuration}/> : null
 
         return(
-            <div className="wrapper">                
-                <FilmList 
-                    films = { this.state.films }
-                    configuration = {this.state.configuration}/>
-            </div>  
+            <div className="wrapper"> 
+                {spinner}
+                {content}
+            </div>   
         )    
     }
 }
