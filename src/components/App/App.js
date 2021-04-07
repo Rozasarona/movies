@@ -23,10 +23,10 @@ class App extends React.Component {
         this.setState({
             error: true,
             loading: false
-        })
+        });
     }
 
-
+    
     componentDidMount() {
         debugger;
         fetch("https://api.themoviedb.org/3/configuration?api_key=2174bad4d702278c7b79c6172f192382") 
@@ -48,7 +48,7 @@ class App extends React.Component {
                         });
                         console.log(result);                        
                     }); 
-                    throw 'Hello';
+                    //throw 'Hello';
             }) 
             .catch(this.onError);                       
     }
@@ -58,12 +58,46 @@ class App extends React.Component {
         const loading = this.state.loading;
         const error = this.state.error;
         const hasData = !(loading || error);
-        const errorMessage = error ? <Alert
+        /*const errorMessage = error ? <Alert
                                         message="Error"
                                         description="Ooops! Something went wrong"
                                         type="error"
                                         showIcon
                                     /> : null;
+
+        if(err.message: 'ERR_INTERNET_DISCONNECTED') {
+                    <Alert
+                        message="Error"
+                        description="Ooops! Network problem"
+                        type="error"
+                        showIcon
+                    />
+                } else {
+
+                }*/
+
+        const errorMessage = (err) => {
+            if(err.message === 'Failed to fetch') {
+                return(
+                    <Alert
+                        message="Error"
+                        description="Ooops! Network problem"
+                        type="error"
+                        showIcon
+                    /> 
+                )
+            } else {
+                return(
+                    <Alert
+                        message="Error"
+                        description="Ooops! Something went wrong"
+                        type="error"
+                        showIcon
+                    /> 
+                )
+            }
+        }
+
         const spinner = (loading) ? <div className="spinContainer"><Spin size="large" /></div> : null;
         const content = hasData ? <FilmList 
                                        films = { this.state.films }
