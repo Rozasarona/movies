@@ -1,6 +1,7 @@
 import React from 'react';
 import MovieCard from '../MovieCard/MovieCard';
-import './FilmList.css'
+import './FilmList.css';
+
 
 
 function FilmList({ films, configuration }) {
@@ -17,7 +18,7 @@ let films2 = films1.map((item) => (
 
     return (
         <section className="moviesapp">
-            { films2 }  
+            { films2 }             
         </section>
     )
 }

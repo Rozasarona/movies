@@ -6,6 +6,9 @@ import { Spin } from 'antd';
 import { Alert } from 'antd';
 import { Input } from 'antd';
 import { Tabs } from 'antd';
+import { Pagination } from 'antd';
+
+
 
 
 
@@ -102,6 +105,9 @@ class App extends React.Component {
                 {errorMess}
                 {spinner}
                 {content}
+                <div className="paginationContainer">
+                    <Pagination size="small" total={50} />    
+                </div> 
             </div>   
         )    
     }

@@ -19,3 +19,7 @@
 .searchContainer {
     width: 930px;
 }
+
+.paginationContainer {
+    padding: 20px;
+}
