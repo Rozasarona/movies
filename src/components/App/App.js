@@ -4,6 +4,8 @@ import './App.css';
 import FilmList from '../FilmList/FilmList'
 import { Spin } from 'antd';
 import { Alert } from 'antd';
+import { Input } from 'antd';
+import { Tabs } from 'antd';
 
 
 
@@ -28,7 +30,7 @@ class App extends React.Component {
 
     
     componentDidMount() {
-        debugger;
+        
         fetch("https://api.themoviedb.org/3/configuration?api_key=2174bad4d702278c7b79c6172f192382") 
             .then(response => response.json())
             .then((result) => {
@@ -59,24 +61,6 @@ class App extends React.Component {
         const error = this.state.error;
         const hasData = !(loading || error);
 
-        /*const errorMessage = error ? <Alert
-                                        message="Error"
-                                        description="Ooops! Something went wrong"
-                                        type="error"
-                                        showIcon
-                                    /> : null;
-
-        if(err.message: 'ERR_INTERNET_DISCONNECTED') {
-                    <Alert
-                        message="Error"
-                        description="Ooops! Network problem"
-                        type="error"
-                        showIcon
-                    />
-                } else {
-
-                }*/
-
         const errorMessage = (err) => {
             if(err.message === 'Failed to fetch') {
                 return(
@@ -104,9 +88,17 @@ class App extends React.Component {
                                        films = { this.state.films }
                                        configuration = {this.state.configuration}/> : null;
         const errorMess = error ? errorMessage(this.state.error) : null;
+        const { TabPane } = Tabs;
 
         return(
             <div className="wrapper"> 
+               <Tabs defaultActiveKey="1" centered>
+                    <TabPane tab="Search" key="1" />                 
+                    <TabPane tab="Rated" key="2" />                    
+                </Tabs>
+                <div className="searchContainer">
+                    <Input placeholder="Type to search..." />
+                </div>
                 {errorMess}
                 {spinner}
                 {content}
@@ -116,3 +108,5 @@ class App extends React.Component {
 }
 
 export default App;
+
+
