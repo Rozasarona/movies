@@ -21,7 +21,7 @@ class App extends React.Component {
 
     onError = (err) => {
         this.setState({
-            error: true,
+            error: err,
             loading: false
         });
     }
@@ -58,6 +58,7 @@ class App extends React.Component {
         const loading = this.state.loading;
         const error = this.state.error;
         const hasData = !(loading || error);
+
         /*const errorMessage = error ? <Alert
                                         message="Error"
                                         description="Ooops! Something went wrong"
@@ -98,15 +99,15 @@ class App extends React.Component {
             }
         }
 
-        const spinner = (loading) ? <div className="spinContainer"><Spin size="large" /></div> : null;
+        const spinner = loading ? <div className="spinContainer"><Spin size="large" /></div> : null;
         const content = hasData ? <FilmList 
                                        films = { this.state.films }
                                        configuration = {this.state.configuration}/> : null;
-
+        const errorMess = error ? errorMessage(this.state.error) : null;
 
         return(
             <div className="wrapper"> 
-                {errorMessage}
+                {errorMess}
                 {spinner}
                 {content}
             </div>   
