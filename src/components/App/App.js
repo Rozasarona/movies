@@ -1,10 +1,11 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
 import './App.css';
-import FilmList from '../FilmList/FilmList'
+import FilmList from '../FilmList/FilmList';
+import Search from '../Search/Search'; 
 import { Spin } from 'antd';
 import { Alert } from 'antd';
-import { Input } from 'antd';
+
 import { Tabs } from 'antd';
 import { Pagination } from 'antd';
 
@@ -99,9 +100,7 @@ class App extends React.Component {
                     <TabPane tab="Search" key="1" />                 
                     <TabPane tab="Rated" key="2" />                    
                 </Tabs>
-                <div className="searchContainer">
-                    <Input placeholder="Type to search..." />
-                </div>
+                <Search />
                 {errorMess}
                 {spinner}
                 {content}
