@@ -7,32 +7,30 @@ class Search extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { typeOfSearch: ''}
-
-    this.onInput = this.onInput.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+        this.state = { typeOfSearch: ''};
+        this.onInput = this.onInput.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+    }
 
     onInput(event) {
-        this.setState({typeOfSearch: event.target.value })
+        this.setState({typeOfSearch: event.target.value });
     }
 
-    this.onSubmit(event) {
+    onSubmit(event) {
 
     }
 
-    this.componentDidUpdate() {
-        
+    componentDidUpdate() {
+
     }
 
     render() {
-
+        return(
+            <div className="searchContainer">
+                <Input placeholder="Type to search..." />
+            </div>
+        );
     }
-
-    return(
-        <div className="searchContainer">
-            <Input placeholder="Type to search..." />
-        </div>
-    )
 }
 
 export default Search;
