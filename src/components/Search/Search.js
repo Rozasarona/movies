@@ -1,5 +1,6 @@
 import React from 'react';
 import { Input } from 'antd';
+import  debounce from 'lodash.debounce';
 
 
 
@@ -7,17 +8,11 @@ class Search extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { typeOfSearch: ''};
         this.onInput = this.onInput.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
     }
 
     onInput(event) {
-        this.setState({typeOfSearch: event.target.value });
-    }
-
-    onSubmit(event) {
-
+        this.props.onSearchTextChange(event.target.value);
     }
 
     componentDidUpdate() {
@@ -27,7 +22,7 @@ class Search extends React.Component {
     render() {
         return(
             <div className="searchContainer">
-                <Input placeholder="Type to search..." />
+                <Input onInput = {debounce(this.onInput, 300)}  placeholder="Type to search..." />
             </div>
         );
     }
