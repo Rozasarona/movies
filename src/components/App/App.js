@@ -48,7 +48,7 @@ class App extends React.Component {
                     });
                     //throw 'Hello';
     }
-        
+
     componentDidMount() {
 
         fetch("https://api.themoviedb.org/3/configuration?api_key=2174bad4d702278c7b79c6172f192382") 
@@ -59,7 +59,7 @@ class App extends React.Component {
                 });
 
             })
-            
+
             .then(() => {
                 this.doSearch('');
             })
@@ -99,27 +99,27 @@ class App extends React.Component {
 
         const spinner = loading ? <div className="spinContainer"><Spin size="large" /></div> : null;
         const content = hasData ? <FilmList
-                                       films = { this.state.films }
-                                       configuration = {this.state.configuration}/> : null;
+                                    films = { this.state.films }
+                                    configuration = {this.state.configuration}/> : null;
         const errorMess = error ? errorMessage(this.state.error) : null;
         const { TabPane } = Tabs;
 
         return(
-            <div className="wrapper"> 
-               <Tabs defaultActiveKey="1" centered>
-                    <TabPane tab="Search" key="1" />                 
-                    <TabPane tab="Rated" key="2" />                    
+            <div className="wrapper">
+                <Tabs defaultActiveKey="1" centered>
+                    <TabPane tab="Search" key="1" />
+                    <TabPane tab="Rated" key="2" />
                 </Tabs>
                 <Search onSearchTextChange = {this.setSearchValue} />
                 {errorMess}
                 {spinner}
                 {content}
-                
+
                 <div className="paginationContainer">
-                    <Pagination size="small" total={50} />    
-                </div> 
-            </div>   
-        )    
+                    <Pagination size="small" total={50} />
+                </div>
+            </div>
+        )
     }
 }
 
