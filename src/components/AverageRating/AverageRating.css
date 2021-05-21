@@ -1,0 +1,32 @@
+.average-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    width: 40px;
+    height: 40px;
+
+    border: 2px solid yellow;
+    border-radius: 20px;
+}
+
+.very-low {
+    /* 0 - 3 */
+    border-color: #E90000;
+}
+
+.low {
+    /* 3 - 5 */
+    border-color: #E97E00
+}
+
+.medium {
+    /* 5 - 7 */
+    border-color: #E9D100
+}
+
+.high {
+    /* 7 - */
+    border-color: #66E900
+}

@@ -3,7 +3,9 @@ import { format } from 'date-fns';
 import { Rate } from 'antd';
 
 import FilmCover from '../FilmCover/FilmCover';
-import GenresContext from '../GenresContext';
+import AverageRating from '../AverageRating/AverageRating';
+
+import { GenresContext, ConfigurationContext } from '../ReactContexts';
 
 import './MovieCard.css';
 
@@ -15,7 +17,7 @@ function cutOverview (overview, maxLength) {
     }
 }
 
-function MovieCard ({id, poster_path, title, overview, configuration, release_date, genre_ids, onRateChange, rating}) {
+function MovieCard ({id, poster_path, title, overview, release_date, genre_ids, onRateChange, rating, vote_average}) {
     let parsedReleaseDate = null;
     if (release_date) {
         parsedReleaseDate = new Date(release_date);
@@ -25,25 +27,30 @@ function MovieCard ({id, poster_path, title, overview, configuration, release_da
 
     return (
         <GenresContext.Consumer>
-            {allGenres => {
-                const genres = genre_ids.map(genre_id => allGenres.find(genre => genre.id === genre_id));
+            {allGenres => 
+                <ConfigurationContext.Consumer>
+                    {configuration => {
+                        const genres = genre_ids.map(genre_id => allGenres.find(genre => genre.id === genre_id));
 
-                return (
-                    <div className="moviesapp_film">
-                        <FilmCover
-                            configuration={configuration}
-                            poster_path={poster_path} />
-                        <div className="moviesapp_content">
-                            <h2>{title}</h2>
-                            <span className="filmDate">{parsedReleaseDate && format(parsedReleaseDate, 'MMMM d, yyyy')}</span><br/><br/>
-                            {genres.map(genre => (<button key={genre.id}>{genre.name}</button>))}
-                            <br/><br/>
-                            <p>{cutOverview(overview, 130)}</p>
-                            <Rate count={10} onChange={onRateChangeInternal} value={rating} />
-                        </div>
-                    </div>
-                );
-            }}
+                        return (
+                            <div className="moviesapp_film">
+                                <FilmCover
+                                    configuration={configuration}
+                                    poster_path={poster_path} />
+                                <div className="moviesapp_content">
+                                    <AverageRating value={vote_average} />
+                                    <h2>{title}</h2>
+                                    <span className="filmDate">{parsedReleaseDate && format(parsedReleaseDate, 'MMMM d, yyyy')}</span><br/><br/>
+                                    {genres.map(genre => (<button key={genre.id}>{genre.name}</button>))}
+                                    <br/><br/>
+                                    <p>{cutOverview(overview, 130)}</p>
+                                    <Rate count={10} onChange={onRateChangeInternal} value={rating} />
+                                </div>
+                            </div>
+                        );
+                    }}
+                </ConfigurationContext.Consumer>
+            }
         </GenresContext.Consumer>
     );
 }

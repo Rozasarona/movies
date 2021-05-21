@@ -5,5 +5,6 @@ export const URLS = {
     GET_CONFIGURATION: `${BASE_URL}/configuration`,
     GET_RATED_MOVIES: (guest_session_id) => `${BASE_URL}/guest_session/${guest_session_id}/rated/movies`,
     RATE_MOVIE: (movie_id) => `${BASE_URL}/movie/${movie_id}/rating`,
-    GET_ALL_GENRES: `${BASE_URL}/genre/movie/list`
+    GET_ALL_GENRES: `${BASE_URL}/genre/movie/list`,
+    SEARCH_MOVIES: `${BASE_URL}/search/movie`
 };

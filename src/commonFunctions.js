@@ -1,24 +1,50 @@
 import { API_KEY, URLS } from './constants';
 
+function addParameters(url, params) {
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+}
+
 function prepareUrlWithApiKey(url) {
     const preparedUrl = new URL(url);
-    preparedUrl.searchParams.append("api_key", API_KEY);
+    addParameters(preparedUrl, { api_key: API_KEY });
     return preparedUrl;
 }
 
 function addLanguageParameter(url) {
-    url.searchParams.append("language", "en-US");
+    addParameters(url, { language: "en-US" });
+}
+
+async function tryCatch(tryFn, catchFn) {
+    try {
+        await tryFn();
+    } catch(error) {
+        if(catchFn) catchFn(error);
+        else throw error;
+    }
 }
 
 async function getJson(url, errorCallback) {
-    try {
+    let result;
+    await tryCatch(async () => {
         const response = await fetch(url);
-        return await response.json();
-    } catch (error) {
-        if (errorCallback) {
-            errorCallback(error);
-        }
-    }
+        result = await response.json();
+    }, errorCallback);
+    return result;
+}
+
+async function postJson(url, payload, errorCallback) {
+    let result;
+    await tryCatch(async () => {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(payload)
+        });
+        result = await response.json();
+    }, errorCallback);
+    return result;
 }
 
 export async function createGuestSession(errorCallback) {
@@ -45,24 +71,18 @@ export async function getConfiguration(errorCallback) {
 
 export async function getRatedMovies(guestSessionId, page) {
     const url = prepareUrlWithApiKey(URLS.GET_RATED_MOVIES(guestSessionId));
-    addLanguageParameter(url);
-    url.searchParams.append("page", page || 1);
+    addParameters(url, {
+        language: "en-US",
+        page: page || 1
+    });
     const result = await getJson(url);
     return result;
 }
 
-export async function rateMovie(movieId, guestSessionId, rating) {
+export async function rateMovie(movieId, guestSessionId, rating, errorCallback) {
     const url = prepareUrlWithApiKey(URLS.RATE_MOVIE(movieId));
-    url.searchParams.append("guest_session_id", guestSessionId);
-    const response = await fetch(url, {
-        method: "POST",
-        headers: {
-            'Content-type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify({value: rating})
-    })
-    const result = await response.json();
-    return result;
+    addParameters(url, { guest_session_id: guestSessionId });
+    return await postJson(url, { value: rating }, errorCallback);
 }
 
 export async function getAllGenres(errorCallback) {
@@ -70,4 +90,15 @@ export async function getAllGenres(errorCallback) {
     addLanguageParameter(url);
     const result = await getJson(url, errorCallback);
     return result.genres;
+}
+
+export async function searchMovies(searchTerm, page, errorCallback) {
+    const url = prepareUrlWithApiKey(URLS.SEARCH_MOVIES);
+    addParameters(url, {
+        language: "en-US",
+        query: searchTerm,
+        page: page || 1,
+        include_adult: false
+    });
+    return await getJson(url, errorCallback);
 }
