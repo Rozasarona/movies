@@ -38,11 +38,13 @@ function MovieCard ({id, poster_path, title, overview, release_date, genre_ids, 
                                     configuration={configuration}
                                     poster_path={poster_path} />
                                 <div className="moviesapp_content">
-                                    <AverageRating value={vote_average} />
-                                    <h2>{title}</h2>
-                                    <span className="filmDate">{parsedReleaseDate && format(parsedReleaseDate, 'MMMM d, yyyy')}</span><br/><br/>
-                                    {genres.map(genre => (<button key={genre.id}>{genre.name}</button>))}
-                                    <br/><br/>
+                                    <div className="content_header">
+                                        <h2>{title}</h2>
+                                        <AverageRating value={vote_average} />
+                                    </div>
+                                    <span className="filmDate">{parsedReleaseDate && format(parsedReleaseDate, 'MMMM d, yyyy')}</span><br/>
+                                    {genres.map(genre => (<button className="btn_genre" key={genre.id}>{genre.name}</button>))}
+                                    <br/>
                                     <p>{cutOverview(overview, 130)}</p>
                                     <Rate count={10} onChange={onRateChangeInternal} value={rating} />
                                 </div>
