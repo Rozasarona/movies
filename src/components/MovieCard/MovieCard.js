@@ -27,7 +27,7 @@ function MovieCard ({id, poster_path, title, overview, release_date, genre_ids, 
 
     return (
         <GenresContext.Consumer>
-            {allGenres => 
+            {allGenres =>
                 <ConfigurationContext.Consumer>
                     {configuration => {
                         const genres = genre_ids.map(genre_id => allGenres.find(genre => genre.id === genre_id));
