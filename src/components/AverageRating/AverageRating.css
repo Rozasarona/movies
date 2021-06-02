@@ -4,11 +4,11 @@
     align-items: center;
     text-align: center;
 
-    width: 30px;
+    min-width: 30px;
     height: 30px;
 
     border: 2px solid yellow;
-    border-radius: 20px;
+    border-radius: 15px;
 }
 
 .very-low {
