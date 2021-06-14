@@ -67,6 +67,7 @@ class App extends React.Component {
                 currentPage: result.page
             }
         });
+        console.log(result);
     };
 
     loadRatedMovies = async page => {

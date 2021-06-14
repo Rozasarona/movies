@@ -48,7 +48,7 @@ function MovieCard ({id, poster_path, title, overview, release_date, genre_ids, 
                                         <br/>
                                         <p>{cutOverview(overview, 130)}</p>
                                     </div>
-                                    <Rate count={10} onChange={onRateChangeInternal} value={rating} />
+                                    <Rate count={10} onChange={onRateChangeInternal} value={rating} allowHalf />
                                 </div>
                             </div>
                         );
