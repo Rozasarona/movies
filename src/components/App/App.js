@@ -41,14 +41,13 @@ class App extends React.Component {
             activeTab: "search"
         };
 
-        
+        this.api = new Api();
     }
 
     async componentDidMount() {
-        const api = new Api();
-        const guestSessionId = await api.getGuestSessionId(this.onError);
-        const configuration = await api.getConfiguration(this.onError);
-        const genres = await api.getAllGenres(this.onError);
+        const guestSessionId = await this.api.getGuestSessionId(this.onError);
+        const configuration = await this.api.getConfiguration(this.onError);
+        const genres = await this.api.getAllGenres(this.onError);
 
         this.setState({
             guestSessionId: guestSessionId,
@@ -58,12 +57,11 @@ class App extends React.Component {
     }
 
     doSearch = async (searchTerm, page) => {
-        const api = new Api();
         if(!searchTerm || searchTerm === '' || searchTerm.trim() === '') return;
 
         this.setState({loading: true});
 
-        const result = await api.searchMovies(searchTerm, page, this.onError);
+        const result = await this.api.searchMovies(searchTerm, page, this.onError);
 
         this.setState({
             loading: false,
@@ -78,10 +76,9 @@ class App extends React.Component {
     };
 
     loadRatedMovies = async page => {
-        const api = new Api();
         this.setState({loading: true});
 
-        const ratedMovies = await api.getRatedMovies(this.state.guestSessionId, page);
+        const ratedMovies = await this.api.getRatedMovies(this.state.guestSessionId, page);
 
         this.setState({
             loading: false,
@@ -119,8 +116,7 @@ class App extends React.Component {
     onSearchTextChange = searchValue => this.doSearch(searchValue, 1);
 
     onMovieRateChange = async (id, value) => {
-        const api = new Api();
-        await api.rateMovie(id, this.state.guestSessionId, value);
+        await this.api.rateMovie(id, this.state.guestSessionId, value);
         this.setState(oldState => {
             return {
                 ...oldState,
@@ -178,7 +174,7 @@ class App extends React.Component {
                         current={currentPage}
                         hideOnSinglePage={true}
                         showSizeChanger={false}
-                        onChange={this.doSearch(this.state.searchTabState.searchTerm, page)} />
+                        onChange={page => this.doSearch(this.state.searchTabState.searchTerm, page)} />
                 </div>
             </>);
         } else {
@@ -211,7 +207,7 @@ class App extends React.Component {
                         current={currentPage}
                         hideOnSinglePage={true}
                         showSizeChanger={false}
-                        onChange={this.loadRatedMovies(page)} />
+                        onChange={this.loadRatedMovies} />
                 </div>
             </>);
         } else {

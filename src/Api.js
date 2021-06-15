@@ -1,6 +1,3 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-
 class Api {
     API_KEY = "2174bad4d702278c7b79c6172f192382";
     BASE_URL = "https://api.themoviedb.org/3";
