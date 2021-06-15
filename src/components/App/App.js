@@ -6,7 +6,9 @@ import Search from '../Search/Search';
 import { GenresContext, ConfigurationContext } from '../ReactContexts';
 import ErrorAlert from '../ErrorAlert/ErrorAlert';
 
-import * as commonFunctions from '../../commonFunctions';
+import Api from '../../Api'
+
+//import * as commonFunctions from '../../commonFunctions';
 
 import './App.css';
 
@@ -35,14 +37,17 @@ class App extends React.Component {
                 message: null,
                 description: null,
                 visible: false
-            }
+            },
+            activeTab: "search"
         };
+
+        const api=new Api();
     }
 
     async componentDidMount() {
-        const guestSessionId = await commonFunctions.getGuestSessionId(this.onError);
-        const configuration = await commonFunctions.getConfiguration(this.onError);
-        const genres = await commonFunctions.getAllGenres(this.onError);
+        const guestSessionId = await api.getGuestSessionId(this.onError);
+        const configuration = await api.getConfiguration(this.onError);
+        const genres = await api.getAllGenres(this.onError);
 
         this.setState({
             guestSessionId: guestSessionId,
@@ -52,11 +57,11 @@ class App extends React.Component {
     }
 
     doSearch = async (searchTerm, page) => {
-        if(!searchTerm || searchTerm === '') return;
+        if(!searchTerm || searchTerm === '' || searchTerm.trim() === '') return;
 
         this.setState({loading: true});
 
-        const result = await commonFunctions.searchMovies(searchTerm, page, this.onError);
+        const result = await api.searchMovies(searchTerm, page, this.onError);
 
         this.setState({
             loading: false,
@@ -73,7 +78,7 @@ class App extends React.Component {
     loadRatedMovies = async page => {
         this.setState({loading: true});
 
-        const ratedMovies = await commonFunctions.getRatedMovies(this.state.guestSessionId, page);
+        const ratedMovies = await api.getRatedMovies(this.state.guestSessionId, page);
 
         this.setState({
             loading: false,
@@ -104,20 +109,49 @@ class App extends React.Component {
                 visible: true
             },
             loading: false
+
         });
     };
 
     onSearchTextChange = searchValue => this.doSearch(searchValue, 1);
 
-    onPageChange = page => this.doSearch(this.state.searchTabState.searchTerm, page);
-
-    onRatedPageChange = page => this.loadRatedMovies(page);
-
-    onMovieRateChange = async (id, value) => await commonFunctions.rateMovie(id, this.state.guestSessionId, value);
+    onMovieRateChange = async (id, value) => {
+        await api.rateMovie(id, this.state.guestSessionId, value);
+        this.setState(oldState => {
+            return {
+                ...oldState,
+                searchTabState: {
+                    ...oldState.searchTabState,
+                    films: oldState.searchTabState.films.map(film => film.id === id ? { ...film, rating: value } : film)
+                }
+            };
+        });
+    };
 
     onTabChange = (activeKey) => {
         if(activeKey === 'rated') {
             this.loadRatedMovies();
+        }
+        this.setState({ activeTab: activeKey });
+    };
+
+    renderTab = () => {
+        switch(this.state.activeTab) {
+            case "search":
+                return (
+                    <div className="wrapper">
+                        <Search onSearchTextChange = {this.onSearchTextChange} />
+                        {this.tryRenderFilmListForSearch()}
+                    </div>
+                );
+            case "rated":
+                return (
+                    <div className="wrapper">
+                        {this.tryRenderFilmListForRated()}
+                    </div>
+                );
+            default:
+                return null;
         }
     };
 
@@ -140,7 +174,7 @@ class App extends React.Component {
                         current={currentPage}
                         hideOnSinglePage={true}
                         showSizeChanger={false}
-                        onChange={this.onPageChange} />
+                        onChange={this.doSearch(this.state.searchTabState.searchTerm, page)} />
                 </div>
             </>);
         } else {
@@ -150,7 +184,7 @@ class App extends React.Component {
             } else {
                 message = "Type something into search field...";
             }
-            return this.renderPlaceholder(message);
+            return <div>{ message }</div>;
         }
     };
 
@@ -173,15 +207,13 @@ class App extends React.Component {
                         current={currentPage}
                         hideOnSinglePage={true}
                         showSizeChanger={false}
-                        onChange={this.onRatedPageChange} />
+                        onChange={this.loadRatedMovies(page)} />
                 </div>
             </>);
         } else {
-            return this.renderPlaceholder("You didn't rate any film yet...");
+            return <div>"You didn't rate any film yet..."</div>;
         }
     };
-
-    renderPlaceholder = (message) => (<div> {message} </div>);
 
     render() {
         return (
@@ -194,17 +226,8 @@ class App extends React.Component {
                 <GenresContext.Provider value={this.state.genres}>
                     <ConfigurationContext.Provider value={this.state.configuration}>
                         <Tabs defaultActiveKey="1" centered onChange={this.onTabChange}>
-                            <TabPane tab="Search" key="search">
-                                <div className="wrapper">
-                                    <Search onSearchTextChange = {this.onSearchTextChange} />
-                                    {this.tryRenderFilmListForSearch()}
-                                </div>
-                            </TabPane>
-                            <TabPane tab="Rated" key="rated">
-                                <div className="wrapper">
-                                    {this.tryRenderFilmListForRated()}
-                                </div>
-                            </TabPane>
+                            <TabPane tab="Search" key="search" />
+                            <TabPane tab="Rated" key="rated" />
                         </Tabs>
                     </ConfigurationContext.Provider>
                 </GenresContext.Provider>
@@ -212,5 +235,7 @@ class App extends React.Component {
         );
     }
 }
+
+
 
 export default App;

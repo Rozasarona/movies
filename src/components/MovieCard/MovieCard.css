@@ -3,10 +3,9 @@
     flex-direction: row;
     width: 454px;
     height: auto;
-    margin: 0 10px 19px;   
-    background: #FFFFFF; 
+    margin: 0 10px 19px;
+    background: #FFFFFF;
     box-shadow: 5px 5px 5px rgba(0,0,0,0.5); /* Параметры тени */
-    
 }
 
 .moviesapp_content {
