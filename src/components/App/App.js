@@ -229,6 +229,7 @@ class App extends React.Component {
                             <TabPane tab="Search" key="search" />
                             <TabPane tab="Rated" key="rated" />
                         </Tabs>
+                        {this.renderTab()}
                     </ConfigurationContext.Provider>
                 </GenresContext.Provider>
             </div>
