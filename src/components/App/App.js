@@ -41,10 +41,11 @@ class App extends React.Component {
             activeTab: "search"
         };
 
-        const api=new Api();
+        
     }
 
     async componentDidMount() {
+        const api = new Api();
         const guestSessionId = await api.getGuestSessionId(this.onError);
         const configuration = await api.getConfiguration(this.onError);
         const genres = await api.getAllGenres(this.onError);
@@ -57,6 +58,7 @@ class App extends React.Component {
     }
 
     doSearch = async (searchTerm, page) => {
+        const api = new Api();
         if(!searchTerm || searchTerm === '' || searchTerm.trim() === '') return;
 
         this.setState({loading: true});
@@ -76,6 +78,7 @@ class App extends React.Component {
     };
 
     loadRatedMovies = async page => {
+        const api = new Api();
         this.setState({loading: true});
 
         const ratedMovies = await api.getRatedMovies(this.state.guestSessionId, page);
@@ -116,6 +119,7 @@ class App extends React.Component {
     onSearchTextChange = searchValue => this.doSearch(searchValue, 1);
 
     onMovieRateChange = async (id, value) => {
+        const api = new Api();
         await api.rateMovie(id, this.state.guestSessionId, value);
         this.setState(oldState => {
             return {
