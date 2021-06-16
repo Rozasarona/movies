@@ -18,9 +18,9 @@ function FilmList({ films, onRateChange }) {
     ));
 
     return (
-        <section className="moviesapp">
+        <main className="moviesapp">
             { films2 }
-        </section>
+        </main>
     );
 }
 

@@ -44,7 +44,11 @@ function MovieCard ({id, poster_path, title, overview, release_date, genre_ids, 
                                     </div>
                                     <div className="content_body">
                                         <span className="filmDate">{parsedReleaseDate && format(parsedReleaseDate, 'MMMM d, yyyy')}</span><br/>
-                                        {genres.map(genre => (<button className="btn_genre" key={genre.id}>{genre.name}</button>))}
+                                        <div className="content_genres">
+                                            {genres.map(genre => (
+                                                <div className="btn_genre" key={genre.id}>{genre.name}</div>
+                                            ))}
+                                        </div>
                                         <br/>
                                         <p>{cutOverview(overview, 130)}</p>
                                     </div>

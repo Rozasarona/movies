@@ -199,16 +199,18 @@ class App extends React.Component {
                 <FilmList
                     films={films}
                     onRateChange={this.onMovieRateChange} />
-                <div className="paginationContainer">
-                    <Pagination
-                        size="small"
-                        total={filmsTotal}
-                        defaultPageSize={20}
-                        current={currentPage}
-                        hideOnSinglePage={true}
-                        showSizeChanger={false}
-                        onChange={this.loadRatedMovies} />
-                </div>
+                <footer className="footerapp">
+                    <div className="paginationContainer">
+                        <Pagination
+                            size="small"
+                            total={filmsTotal}
+                            defaultPageSize={20}
+                            current={currentPage}
+                            hideOnSinglePage={true}
+                            showSizeChanger={false}
+                            onChange={this.loadRatedMovies} />
+                    </div>
+                </footer>
             </>);
         } else {
             return <div>"You didn't rate any film yet..."</div>;
@@ -225,11 +227,13 @@ class App extends React.Component {
                 <div className="spinContainer"><Spin size="large" spinning={this.state.loading} /></div>
                 <GenresContext.Provider value={this.state.genres}>
                     <ConfigurationContext.Provider value={this.state.configuration}>
-                        <Tabs defaultActiveKey="1" centered onChange={this.onTabChange}>
-                            <TabPane tab="Search" key="search" />
-                            <TabPane tab="Rated" key="rated" />
-                        </Tabs>
-                        {this.renderTab()}
+                        <header className="headerapp">
+                            <Tabs defaultActiveKey="1" centered onChange={this.onTabChange}>
+                                <TabPane tab="Search" key="search" />
+                                <TabPane tab="Rated" key="rated" />
+                            </Tabs>
+                            {this.renderTab()}
+                        </header>
                     </ConfigurationContext.Provider>
                 </GenresContext.Provider>
             </div>

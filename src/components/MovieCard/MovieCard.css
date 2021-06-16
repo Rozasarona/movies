@@ -40,6 +40,18 @@
     margin-right: 0 9px 15px;
 }
 
+.content_genres {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .btn_genre {
     margin: 5px 5px 0 0;
+    padding: 0 3px 0 3px;
+    border: 1px solid silver;
+    background-color: #F5F5F5;
+    text-align: center;
+    border-radius: 2px;
+    color: rgba(0, 0, 0, 0.65)
 }
