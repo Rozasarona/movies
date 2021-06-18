@@ -40,10 +40,18 @@
     margin-right: 0 9px 15px;
 }
 
+ul {
+    padding-left: 0;
+}
+
 .content_genres {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+}
+
+ul .btn_genre {
+    list-style-type: none;
 }
 
 .btn_genre {
