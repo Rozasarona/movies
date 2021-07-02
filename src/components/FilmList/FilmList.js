@@ -1,8 +1,9 @@
 import React from 'react';
+import { Pagination } from 'antd';
 import MovieCard from '../MovieCard/MovieCard';
 import './FilmList.css';
 
-function FilmList({ films, onRateChange }) {
+function FilmList({ films, onRateChange, filmsTotal, currentPage, pageChangeHandler }) {
     let films2 = films.map((item) => (
         <MovieCard
             id={item.id}
@@ -17,11 +18,21 @@ function FilmList({ films, onRateChange }) {
             vote_average={item.vote_average} />
     ));
 
-    return (
+    return (<>
         <main className="moviesapp">
             { films2 }
         </main>
-    );
+        <div className="paginationContainer">
+            <Pagination
+                size="small"
+                total={filmsTotal}
+                defaultPageSize={20}
+                defaultCurrent={currentPage}
+                hideOnSinglePage={true}
+                showSizeChanger={false}
+                onChange={pageChangeHandler} />
+        </div>
+    </>);
 }
 
 export default FilmList;

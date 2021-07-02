@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spin, Tabs, Pagination } from 'antd';
+import { Spin, Tabs } from 'antd';
 
 import FilmList from '../FilmList/FilmList';
 import Search from '../Search/Search';
@@ -7,8 +7,6 @@ import { GenresContext, ConfigurationContext } from '../ReactContexts';
 import ErrorAlert from '../ErrorAlert/ErrorAlert';
 
 import Api from '../../Api'
-
-//import * as commonFunctions from '../../commonFunctions';
 
 import './App.css';
 
@@ -19,17 +17,10 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            searchTabState: {
-                searchTerm: '',
-                films: [],
-                filmsTotal: 0,
-                currentPage: 1
-            },
-            ratedTabState: {
-                films: [],
-                filmsTotal: 0,
-                currentPage: 1
-            },
+            searchTerm: '',
+            films: [],
+            filmsTotal: 0,
+            currentPage: 1,
             loading: false,
             genres: [],
             guestSessionId: null,
@@ -38,7 +29,8 @@ class App extends React.Component {
                 description: null,
                 visible: false
             },
-            activeTab: "search"
+            activeTab: "search",
+            ratings: {}
         };
 
         this.api = new Api();
@@ -56,37 +48,44 @@ class App extends React.Component {
         });
     }
 
-    doSearch = async (searchTerm, page) => {
+    doSearch = async page => {
+        const { searchTerm, currentPage } = this.state;
+
+        this.setState({
+            films: [],
+            filmsTotal: 0
+        });
+
         if(!searchTerm || searchTerm === '' || searchTerm.trim() === '') return;
 
         this.setState({loading: true});
 
-        const result = await this.api.searchMovies(searchTerm, page, this.onError);
+        const result = await this.api.searchMovies(searchTerm, page || currentPage, this.onError);
+        const filmsWithRating = result.results || [];
+        filmsWithRating.forEach(x => {
+            if(this.state.ratings[x.id]) {
+                x.rating = this.state.ratings[x.id];
+            }
+        });
 
         this.setState({
             loading: false,
-            searchTabState: {
-                searchTerm: searchTerm,
-                films: result.results || [],
-                filmsTotal: result.total_results,
-                currentPage: result.page
-            }
+            films: filmsWithRating,
+            filmsTotal: result.total_results,
         });
-        console.log(result);
     };
 
     loadRatedMovies = async page => {
-        this.setState({loading: true});
+        this.setState({loading: true,
+            films: [],
+        });
 
-        const ratedMovies = await this.api.getRatedMovies(this.state.guestSessionId, page);
+        const ratedMovies = await this.api.getRatedMovies(this.state.guestSessionId, page || this.state.currentPage);
 
         this.setState({
             loading: false,
-            ratedTabState: {
-                films: ratedMovies.results,
-                currentPage: ratedMovies.page,
-                filmsTotal: ratedMovies.total_results
-            }
+            films: ratedMovies.results,
+            filmsTotal: ratedMovies.total_results
         });
     };
 
@@ -113,108 +112,84 @@ class App extends React.Component {
         });
     };
 
-    onSearchTextChange = searchValue => this.doSearch(searchValue, 1);
+    setSearchTerm = searchValue => {
+        this.setState({
+            searchTerm: searchValue,
+            currentPage: 1
+        });
+    };
+
+    setCurrentPage = page => {
+        this.setState({ currentPage: page });
+    }
+
+    onSearchTextChange = async searchValue => {
+        this.setSearchTerm(searchValue);
+        await this.doSearch();
+    };
+
+    onSearchTabPageChange = async page => {
+        this.setCurrentPage(page);
+        await this.doSearch(page);
+    };
+
+    onRatedTabPageChange = async page => {
+        this.setCurrentPage(page);
+        await this.loadRatedMovies(page);
+    };
 
     onMovieRateChange = async (id, value) => {
         await this.api.rateMovie(id, this.state.guestSessionId, value);
         this.setState(oldState => {
+            const newRatings = { ...oldState.ratings };
+            newRatings[id] = value;
             return {
                 ...oldState,
-                searchTabState: {
-                    ...oldState.searchTabState,
-                    films: oldState.searchTabState.films.map(film => film.id === id ? { ...film, rating: value } : film)
-                }
+                films: oldState.films.map(film => film.id === id ? { ...film, rating: value } : film),
+                ratings: newRatings
             };
         });
     };
 
     onTabChange = (activeKey) => {
-        if(activeKey === 'rated') {
-            this.loadRatedMovies();
+        switch(activeKey) {
+            case 'rated':
+                this.loadRatedMovies();
+                break;
+            default:
+                this.doSearch();
         }
         this.setState({ activeTab: activeKey });
     };
 
     renderTab = () => {
-        switch(this.state.activeTab) {
-            case "search":
-                return (
-                    <div className="wrapper">
-                        <Search onSearchTextChange = {this.onSearchTextChange} />
-                        {this.tryRenderFilmListForSearch()}
-                    </div>
-                );
-            case "rated":
-                return (
-                    <div className="wrapper">
-                        {this.tryRenderFilmListForRated()}
-                    </div>
-                );
-            default:
-                return null;
-        }
-    };
+        const { activeTab, loading, films, searchTerm, filmsTotal, currentPage } = this.state;
 
-    tryRenderFilmListForSearch = () => {
-        const { loading, searchTabState } = this.state;
-        const { films, searchTerm, filmsTotal, currentPage } = searchTabState;
+        let placeholder;
 
-        if (loading) return null;
-
-        if (films && films.length) {
-            return (<>
-                <FilmList
-                    films={films}
-                    onRateChange={this.onMovieRateChange} />
-                <div className="paginationContainer">
-                    <Pagination
-                        size="small"
-                        total={filmsTotal}
-                        defaultPageSize={20}
-                        current={currentPage}
-                        hideOnSinglePage={true}
-                        showSizeChanger={false}
-                        onChange={page => this.doSearch(this.state.searchTabState.searchTerm, page)} />
-                </div>
-            </>);
+        if(activeTab === 'search') {
+            placeholder = (searchTerm && searchTerm !== '')
+                ? (<div>Nothing found by <b>{searchTerm}</b>.</div>)
+                : (<div>Type something into search field...</div>);
         } else {
-            let message;
-            if(searchTerm && searchTerm !== '') {
-                message = (<>Nothing found by <b>{searchTerm}</b>.</>);
-            } else {
-                message = "Type something into search field...";
-            }
-            return <div>{ message }</div>;
+            placeholder = (<div>You didn't rate any film yet...</div>);
         }
-    };
 
-    tryRenderFilmListForRated = () => {
-        const { loading, ratedTabState } = this.state;
-        const { films, filmsTotal, currentPage } = ratedTabState;
-
-        if (loading) return null;
-
-        if (films && films.length) {
-            return (<>
-                <FilmList
-                    films={films}
-                    onRateChange={this.onMovieRateChange} />
-                <footer className="footerapp">
-                    <div className="paginationContainer">
-                        <Pagination
-                            size="small"
-                            total={filmsTotal}
-                            defaultPageSize={20}
-                            current={currentPage}
-                            hideOnSinglePage={true}
-                            showSizeChanger={false}
-                            onChange={this.loadRatedMovies} />
-                    </div>
-                </footer>
-            </>);
-        } else {
-            return <div>"You didn't rate any film yet..."</div>;
-        }
+        const pageChangeHandler = activeTab === 'search' ? this.onSearchTabPageChange : this.onRatedTabPageChange;
+        return (
+            <div className="wrapper">
+                {(activeTab === 'search') && <Search value={searchTerm} onSearchTextChange = {this.onSearchTextChange} />}
+                {!loading && (<>
+                    <FilmList
+                        films={films}
+                        onRateChange={this.onMovieRateChange}
+                        filmsTotal={filmsTotal}
+                        currentPage={currentPage}
+                        pageChangeHandler={pageChangeHandler} />
+                </>)}
+                {!loading && (!films || !films.length) && placeholder}
+            </div>
+        );
     };
 
     render() {
