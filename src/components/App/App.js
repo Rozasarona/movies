@@ -40,11 +40,17 @@ class App extends React.Component {
         const guestSessionId = await this.api.getGuestSessionId(this.onError);
         const configuration = await this.api.getConfiguration(this.onError);
         const genres = await this.api.getAllGenres(this.onError);
+        const ratingsJson = localStorage.getItem('ratings');
+        let ratings;
+        if(ratingsJson) {
+            ratings = JSON.parse(ratingsJson);
+        }
 
         this.setState({
             guestSessionId: guestSessionId,
             configuration: configuration,
-            genres: genres
+            genres: genres,
+            ratings: ratings || {}
         });
     }
 
@@ -143,6 +149,7 @@ class App extends React.Component {
         this.setState(oldState => {
             const newRatings = { ...oldState.ratings };
             newRatings[id] = value;
+            localStorage.setItem('ratings', JSON.stringify(newRatings));
             return {
                 ...oldState,
                 films: oldState.films.map(film => film.id === id ? { ...film, rating: value } : film),
