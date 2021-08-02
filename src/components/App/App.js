@@ -54,8 +54,8 @@ class App extends React.Component {
         });
     }
 
-    doSearch = async page => {
-        const { searchTerm, currentPage } = this.state;
+    doSearch = async (page, searchTerm) => {
+        const { currentPage } = this.state;
 
         this.setState({
             films: [],
@@ -118,9 +118,8 @@ class App extends React.Component {
         });
     };
 
-    setSearchTerm = searchValue => {
+    setPage = () => {
         this.setState({
-            searchTerm: searchValue,
             currentPage: 1
         });
     };
@@ -130,7 +129,6 @@ class App extends React.Component {
     }
 
     onSearchTextChange = async searchValue => {
-        this.setSearchTerm(searchValue);
         await this.doSearch();
     };
 
@@ -170,13 +168,13 @@ class App extends React.Component {
     };
 
     renderTab = () => {
-        const { activeTab, loading, films, searchTerm, filmsTotal, currentPage } = this.state;
+        const { activeTab, loading, films, filmsTotal, currentPage } = this.state;
 
         let placeholder;
 
         if(activeTab === 'search') {
-            placeholder = (searchTerm && searchTerm !== '')
-                ? (<div>Nothing found by <b>{searchTerm}</b>.</div>)
+            placeholder = (this.props.searchTerm)
+                ? (<div>Nothing found by <b>{this.props.searchTerm}</b>.</div>)
                 : (<div>Type something into search field...</div>);
         } else {
             placeholder = (<div>You didn't rate any film yet...</div>);
@@ -185,7 +183,7 @@ class App extends React.Component {
         const pageChangeHandler = activeTab === 'search' ? this.onSearchTabPageChange : this.onRatedTabPageChange;
         return (
             <div className="wrapper">
-                {(activeTab === 'search') && <Search value={searchTerm} onSearchTextChange = {this.onSearchTextChange} />}
+                {(activeTab === 'search') && <Search value={this.props.searchTerm} onSearchTextChange = {this.onSearchTextChange} />}
                 {!loading && (<>
                     <FilmList
                         films={films}
