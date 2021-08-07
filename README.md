@@ -1,4 +1,4 @@
-movies-rozasarona.vercel.app - ссылка на расвернутое приложение
+movies-rozasarona.vercel.app - ссылка на развернутое приложение
 
 
 # Getting Started with Create React App
